@@ -14,9 +14,11 @@ import HomePage from "./Pages/HomePage";
 import ReturnPage from "./Pages/tools/ReturnPage";
 import TakePage from "./Pages/tools/TakePage";
 import ToolsPage from "./Pages/ToolsPage";
+import { Alert } from "@mui/material";
 
 const App = () => {
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
 
   return (
     <Box
@@ -26,6 +28,7 @@ const App = () => {
         justifyContent: "space-between",
         width: "1",
         height: "100vh",
+        background: "#fbe5fd",
       }}
     >
       <Paper
@@ -35,7 +38,7 @@ const App = () => {
           display: "flex",
           justifyContent: "center",
           padding: 2,
-          background: "#0F53B7",
+          background: "#002b9f",
         }}
       >
         <Typography
@@ -46,35 +49,80 @@ const App = () => {
           Smart Inventory Tools & Asset Tracking
         </Typography>
       </Paper>
-      <Box sx={{ flex: 1, background: "#f5edf7" }}>
-        <Router>
-          <Routes>
-            {authToken === null ? (
-              <>
-                <Route
-                  index
-                  element={<HomePage setAuthToken={setAuthToken} />}
-                />
-                <Route path="*" element={<Navigate replace to="/" />} />
-              </>
-            ) : (
-              <Route path="/">
-                <Route index element={<ToolsPage />} />
-                <Route path="/take" element={<TakePage />} />
-                <Route path="/return" element={<ReturnPage />} />
-              </Route>
-            )}
-          </Routes>
-        </Router>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "fit-content",
+            alignItems: "center",
+            padding: 8,
+          }}
+        >
+          <Router>
+            <Routes>
+              {authToken === null ? (
+                <>
+                  <Route
+                    index
+                    element={
+                      <HomePage
+                        setError={setError}
+                        setAuthToken={setAuthToken}
+                      />
+                    }
+                  />
+                  <Route path="*" element={<Navigate replace to="/" />} />
+                </>
+              ) : (
+                <Route path="/">
+                  <Route index element={<ToolsPage />} />
+                  <Route path="/take" element={<TakePage />} />
+                  <Route path="/return" element={<ReturnPage />} />
+                </Route>
+              )}
+            </Routes>
+          </Router>
+        </Paper>
       </Box>
+      {error.length !== 0 && (
+        <Alert
+          sx={{
+            position: "fixed",
+            left: "1%",
+            bottom: "10%",
+            width: "fit-content",
+          }}
+          onClose={() => {
+            setError("");
+          }}
+          variant="filled"
+          severity="error"
+        >
+          {error}
+        </Alert>
+      )}
       <Paper
         variant="outlined"
         square
-        sx={{ display: "flex", justifyContent: "center", padding: 1 }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          padding: 1,
+          background: "#fbe5fd",
+        }}
       >
         <Typography
           variant="body1"
-          sx={{ color: "#0F316D", fontWeight: "bold" }}
+          sx={{ color: "#3700B3", fontWeight: "bold" }}
         >
           Developed by Ashwin, Padmanabhan and Kirithana
         </Typography>
