@@ -19,6 +19,19 @@ import { Alert } from "@mui/material";
 const App = () => {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
+  const [timeoutId, setTimeoutId] = useState<number | null>(null);
+
+  const showErrorMessage = (errorMessage: string) => {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId);
+    }
+    setError(errorMessage);
+    setTimeoutId(
+      window.setTimeout(() => {
+        setError("");
+      }, 5000)
+    );
+  };
 
   return (
     <Box
@@ -75,7 +88,7 @@ const App = () => {
                     index
                     element={
                       <HomePage
-                        setError={setError}
+                        showErrorMessage={showErrorMessage}
                         setAuthToken={setAuthToken}
                       />
                     }
@@ -84,7 +97,7 @@ const App = () => {
                 </>
               ) : (
                 <Route path="/">
-                  <Route index element={<ToolsPage />} />
+                  <Route index element={<ToolsPage authToken={authToken} />} />
                   <Route path="/take" element={<TakePage />} />
                   <Route path="/return" element={<ReturnPage />} />
                 </Route>
