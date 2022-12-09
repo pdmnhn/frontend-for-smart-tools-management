@@ -2,31 +2,40 @@ import { FC, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { getId } from "../services/localServer";
+import { getId } from "../services/localApi";
 import { AxiosError } from "axios";
+import { getAuthToken } from "../services/api";
 
 const HomePage: FC<{
   setAuthToken: React.Dispatch<React.SetStateAction<string | null>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
+  showErrorMessage: (errorMessage: string) => void;
 }> = (props) => {
-  const { setError, setAuthToken } = props;
+  const { showErrorMessage, setAuthToken } = props;
   const [id, setId] = useState<string>("");
+
+  const handleError = (err: unknown) => {
+    setId("");
+    if (err instanceof AxiosError) {
+      showErrorMessage(err.response?.data?.error || err.message);
+    } else {
+      showErrorMessage("Something went wrong");
+    }
+  };
 
   const scan = async () => {
     try {
       setId(await getId("rfid"));
     } catch (err) {
-      setId("");
-      if (err instanceof AxiosError) {
-        setError(err.message);
-      } else {
-        setError("Something gone wrong");
-      }
+      handleError(err);
     }
   };
 
-  const login = () => {
-    setId("");
+  const login = async () => {
+    try {
+      setAuthToken(await getAuthToken(id));
+    } catch (err) {
+      handleError(err);
+    }
   };
 
   return (
@@ -36,7 +45,9 @@ const HomePage: FC<{
       </Typography>
       <TextField
         variant="outlined"
-        disabled
+        InputProps={{
+          readOnly: true,
+        }}
         helperText="Place your ID card on the reader"
         value={id}
       />
