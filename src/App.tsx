@@ -98,8 +98,19 @@ const App = () => {
               ) : (
                 <Route path="/">
                   <Route index element={<ToolsPage authToken={authToken} />} />
-                  <Route path="/take" element={<TakePage />} />
-                  <Route path="/return" element={<ReturnPage />} />
+                  <Route
+                    path="/take"
+                    element={
+                      <TakePage
+                        showErrorMessage={showErrorMessage}
+                        authToken={authToken}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/return"
+                    element={<ReturnPage showErrorMessage={showErrorMessage} />}
+                  />
                 </Route>
               )}
             </Routes>
