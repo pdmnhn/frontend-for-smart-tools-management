@@ -7,7 +7,7 @@ import { AxiosError } from "axios";
 import { getAuthToken } from "../services/api";
 
 const HomePage: FC<{
-  setAuthToken: React.Dispatch<React.SetStateAction<string | null>>;
+  setAuthToken: (authToken: string) => void;
   showErrorMessage: (errorMessage: string) => void;
 }> = (props) => {
   const { showErrorMessage, setAuthToken } = props;
@@ -41,7 +41,7 @@ const HomePage: FC<{
   return (
     <>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Scan your ID card
+        Scan Your ID Card
       </Typography>
       <TextField
         variant="outlined"

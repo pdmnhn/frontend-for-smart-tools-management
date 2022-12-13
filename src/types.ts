@@ -1,4 +1,4 @@
-export interface ToolsAttributes {
+export interface ToolAttributes {
   tool_code: number;
   tooltype_name: string;
   subtype_name: string;
@@ -8,4 +8,10 @@ export interface ToolsAttributes {
   rack: number;
   current_status: string;
   last_scan: string;
+}
+
+export interface TakeToolAttributes {
+  rack: number;
+  current_status: string;
+  usage_type: string;
 }
