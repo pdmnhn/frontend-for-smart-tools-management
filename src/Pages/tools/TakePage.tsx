@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from "react";
-
 import Typography from "@mui/material/Typography";
-
+import Button from "@mui/material/Button";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ScanComponent from "../../components/ScanComponent";
 import { takeTool } from "../../services/api";
 import { TakeToolAttributes } from "../../types";
+import { AxiosError } from "axios";
+import { Link } from "react-router-dom";
 
 const TakePage: FC<{
   showErrorMessage: (errorMessage: string) => void;
@@ -12,24 +14,31 @@ const TakePage: FC<{
 }> = (props) => {
   const { showErrorMessage, authToken } = props;
   const [scannedToolId, setScannedToolId] = useState<string | null>(null);
-  const [takeToolRes, setTakeToolRes] = useState<TakeToolAttributes | null>(
-    null
-  );
+  const [takeToolResponse, setTakeToolResponse] =
+    useState<TakeToolAttributes | null>(null);
 
   useEffect(() => {
-    if (scannedToolId !== null) {
+    if (scannedToolId !== null && takeToolResponse === null) {
       const helper = async () => {
-        const res = await takeTool(authToken, scannedToolId);
-        console.log(res);
-        setTakeToolRes(res);
+        try {
+          const res = await takeTool(authToken, scannedToolId);
+          setTakeToolResponse(res);
+        } catch (err) {
+          setScannedToolId(null);
+          if (err instanceof AxiosError) {
+            showErrorMessage(err.response?.data?.error || err.message);
+          } else {
+            showErrorMessage("Something went wrong");
+          }
+        }
       };
       helper();
     }
-  }, [authToken, scannedToolId]);
+  }, [authToken, scannedToolId, showErrorMessage, takeToolResponse]);
 
   return (
     <>
-      {setTakeToolRes === null ? (
+      {takeToolResponse === null ? (
         <>
           <Typography variant="h6">Take Tool by Scanning</Typography>
           <ScanComponent
@@ -40,9 +49,20 @@ const TakePage: FC<{
       ) : (
         <>
           <Typography variant="h6">Tool Taken Successfully</Typography>
-          <Typography>Current Status: {takeToolRes?.current_status}</Typography>
-          <Typography>Rack: {takeToolRes?.rack}</Typography>
-          <Typography>Usage Type: {takeToolRes?.usage_type}</Typography>
+          <Typography>
+            Current Status: {takeToolResponse?.current_status}
+          </Typography>
+          <Typography>Rack: {takeToolResponse?.rack}</Typography>
+          <Typography>Usage Type: {takeToolResponse?.usage_type}</Typography>
+          <Button
+            variant="contained"
+            startIcon={<ArrowBackIcon />}
+            sx={{ mt: 2 }}
+            component={Link}
+            to="/"
+          >
+            Tools Page
+          </Button>
         </>
       )}
     </>

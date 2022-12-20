@@ -42,6 +42,7 @@ const ToolsPage: FC<{ authToken: string }> = ({ authToken }) => {
         </Button>
         <Button
           variant="contained"
+          disabled={tools?.length === 0}
           sx={{ ml: 2 }}
           component={Link}
           to="/return"
