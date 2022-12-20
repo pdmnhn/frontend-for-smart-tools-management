@@ -74,7 +74,7 @@ const App = () => {
             component="h1"
             sx={{ color: "white", fontWeight: "bold" }}
           >
-            Smart Inventory Tools & Asset Tracking
+            Smart Inventory Tools & Asset Tracking System
           </Typography>
           <Button
             size="small"
