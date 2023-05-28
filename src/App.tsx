@@ -178,8 +178,7 @@ const App = () => {
             variant="body1"
             sx={{ color: "#3700B3", fontWeight: "bold" }}
           >
-            Developed by the Mini Project Students of EIE, Final Year, MIT, Anna
-            University
+            Developed by Padmanabhan
           </Typography>
         </Paper>
       </Box>
